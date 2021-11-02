@@ -1,0 +1,16 @@
+{
+  "plugins": ["prettier"],
+  "extends": ["prettier", "airbnb-base"],
+  "rules": {
+    "prettier/prettier": "error",
+    "space-before-function-paren": "off",
+    "arrow-parens": "off",
+    "no-underscore-dangle": "off",
+    "consistent-return": "off",
+    "implicit-arrow-linebreak": "off",
+    "class-methods-use-this": "off",
+    "operator-linebreak": "off",
+    "object-curly-newline": "off",
+    "no-console": "off"
+  }
+}
