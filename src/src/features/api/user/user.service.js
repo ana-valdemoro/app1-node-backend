@@ -67,7 +67,7 @@ const getUser = async (uuid) => {
 };
 
 const createUser = async (data) => {
-  const dataToCreate = { ...data, token: jwt.generateJWT({ uuid: '', type: 'user' }) };
+  const dataToCreate = { ...data, token: '' };
   const user = await User.create(dataToCreate);
   return user.save();
 };
