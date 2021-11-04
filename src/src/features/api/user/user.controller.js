@@ -25,51 +25,51 @@ const activate = async (req, res) => {
     status: 'OK',
   });
 };
-const loginAdmin = async (req, res, next) => {
-  const { email, password } = req.body;
-  let user;
-  try {
-    user = await userService.getUserByEmail(email);
-  } catch (error) {
-    logger.error(`${error}`);
-    return next(boom.unauthorized('Ocurrio un error al buscar el user revisar el log'));
-  }
-  if (!user) {
-    return next(boom.unauthorized('El email y la contraseña introducidos no son válidos'));
-  }
-  /*Empieza mi código*/
-  try {
-    const isUserAthorized = await userService.isUserAuthorized(user, 'SUPERADMIN');
-    if (!isUserAthorized) {
-      return next(boom.unauthorized('El usuario no es admin'));
-    }
-  } catch (error) {
-    logger.error(`${error}`);
-    return next(boom.unauthorized('Ocurrio otro error al buscar el user revisar el log'));
-  }
-  /*Termina mi código*/
-  try {
-    const userHasValidPassword = await user.validPassword(password);
+// const loginAdmin = async (req, res, next) => {
+//   const { email, password } = req.body;
+//   let user;
+//   try {
+//     user = await userService.getUserByEmail(email);
+//   } catch (error) {
+//     logger.error(`${error}`);
+//     return next(boom.unauthorized('Ocurrio un error al buscar el user revisar el log'));
+//   }
+//   if (!user) {
+//     return next(boom.unauthorized('El email y la contraseña introducidos no son válidos'));
+//   }
+//   /*Empieza mi código*/
+//   try {
+//     const isUserAthorized = await userService.isUserAuthorized(user, 'SUPERADMIN');
+//     if (!isUserAthorized) {
+//       return next(boom.unauthorized('El usuario no es admin'));
+//     }
+//   } catch (error) {
+//     logger.error(`${error}`);
+//     return next(boom.unauthorized('Ocurrio otro error al buscar el user revisar el log'));
+//   }
+//   /*Termina mi código*/
+//   try {
+//     const userHasValidPassword = await user.validPassword(password);
 
-    if (!userHasValidPassword) {
-      return next(boom.unauthorized('La contraseña es errónea'));
-    }
-  } catch (error) {
-    logger.error(`${error}`);
-    return next(boom.badRequest(error.message));
-  }
+//     if (!userHasValidPassword) {
+//       return next(boom.unauthorized('La contraseña es errónea'));
+//     }
+//   } catch (error) {
+//     logger.error(`${error}`);
+//     return next(boom.badRequest(error.message));
+//   }
 
-  let response;
+//   let response;
 
-  try {
-    response = await user.toAuthJSON();
-  } catch (error) {
-    logger.error(`${error}`);
-    return next(boom.badRequest(error.message));
-  }
+//   try {
+//     response = await user.toAuthJSON();
+//   } catch (error) {
+//     logger.error(`${error}`);
+//     return next(boom.badRequest(error.message));
+//   }
 
-  return res.json(response);
-};
+//   return res.json(response);
+// };
 const login = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -295,5 +295,4 @@ module.exports = {
   createUser,
   putUser,
   deleteUser,
-  loginAdmin,
 };

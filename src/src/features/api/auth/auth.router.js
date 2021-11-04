@@ -4,12 +4,13 @@ const router = express.Router();
 
 const userController = require('../user/user.controller');
 const userValidator = require('../user/user.validator');
+const middleware = require('../user/user.middleware');
 
 // Activar de usuario
 router.post('/activate/:token', userValidator.activateUser, userController.activate);
 
 // Login de admin
-router.post('/login/admin', userValidator.loginUser, userController.loginAdmin);
+router.post('/login/admin', userValidator.loginUser, middleware.isAdmin, userController.login);
 
 // Login del usuario
 router.post('/login', userValidator.loginUser, userController.login);
