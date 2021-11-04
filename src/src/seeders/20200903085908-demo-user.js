@@ -11,12 +11,21 @@ module.exports = {
           name: 'Superadmin',
           permissions: 'SUPERADMIN',
         },
+        {
+          uuid: uuid.v4(),
+          name: 'Students',
+          permissions: 'STUDENTS',
+        },
       ]);
 
       let superAdminGroup = await UserGroup.findAll({ where: { name: 'Superadmin' } });
+      let studentsGroup = await UserGroup.findAll({ where: { name: 'Students' } });
 
       if (superAdminGroup.length > 0) {
         superAdminGroup = superAdminGroup.pop();
+      }
+      if (studentsGroup.length > 0) {
+        studentsGroup = studentsGroup.pop();
       }
 
       const password = bcrypt.hashSync('123456', bcrypt.genSaltSync(10));
@@ -28,6 +37,15 @@ module.exports = {
           email: 'admin@admin.com',
           password,
           role_uuid: superAdminGroup.uuid,
+          token: '',
+          active: true,
+        },
+        {
+          uuid: uuid.v4(),
+          name: 'Ana Valdemoro',
+          email: 'ana@gmail.com',
+          password,
+          role_uuid: studentsGroup.uuid,
           token: '',
           active: true,
         },
