@@ -54,6 +54,7 @@ const getUsers = async (filters, options) =>
   User.findAll({ where: filters, order: options.order })
     .then((result) => {
       console.log(result);
+      return result;
     })
     .catch((err) => {
       throw new Error(err.message);
