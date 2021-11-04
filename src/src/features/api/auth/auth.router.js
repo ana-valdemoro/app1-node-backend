@@ -8,6 +8,9 @@ const userValidator = require('../user/user.validator');
 // Activar de usuario
 router.post('/activate/:token', userValidator.activateUser, userController.activate);
 
+// Login de admin
+router.post('/login/admin', userValidator.loginUser, userController.loginAdmin);
+
 // Login del usuario
 router.post('/login', userValidator.loginUser, userController.login);
 
