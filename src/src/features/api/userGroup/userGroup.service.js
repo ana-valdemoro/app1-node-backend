@@ -1,22 +1,22 @@
-const { models } = require('../../../models');
+const { UserGroup } = require('../../../models');
 
 const toPublic = (userGroup) => userGroup.toJSON();
 
 const getUserGroups = (filters, options) =>
-  models.UserGroup.findAll({
+  UserGroup.findAll({
     where: filters,
     order: options.order,
   });
 
 const getUserGroup = async (uuid) =>
-  models.UserGroup.findOne({
+  UserGroup.findOne({
     where: {
       uuid,
     },
   });
 
 const createUserGroup = async (data) => {
-  const userGroup = models.UserGroup.create(data);
+  const userGroup = UserGroup.create(data);
   return userGroup.save();
 };
 
