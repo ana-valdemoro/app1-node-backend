@@ -4,8 +4,17 @@ const router = express.Router();
 
 const authorization = require('../../../utils/middleware/authorization');
 const userController = require('./user.controller');
+const userBillingController = require('../UserBilling/userBilling.controller');
 const middleware = require('./user.middleware');
 const validator = require('./user.validator');
+
+// Ver un usuario
+router.get(
+  '/:userUuid/billing',
+  authorization('users:view'),
+  middleware.loadUser,
+  userBillingController.getUserBilling,
+);
 
 // Ver un usuario
 router.get('/:userUuid', authorization('users:view'), middleware.loadUser, userController.getUser);
