@@ -7,13 +7,22 @@ const userController = require('./user.controller');
 const userBillingController = require('../UserBilling/userBilling.controller');
 const middleware = require('./user.middleware');
 const validator = require('./user.validator');
+const userBillingValidator = require('../UserBilling/userBilling.validator');
 
-// Ver un usuario
+// Ver datos fiscales de un usuario
 router.get(
   '/:userUuid/billing',
-  authorization('users:view'),
+  authorization('userBillings:view'),
   middleware.loadUser,
   userBillingController.getUserBilling,
+);
+// Crear datos fiscales de un usuario
+router.post(
+  '/:userUuid/billing',
+  authorization('userBillings:create'),
+  middleware.loadUser,
+  userBillingValidator.createUserBilling,
+  userBillingController.createUserBilling,
 );
 
 // Ver un usuario
