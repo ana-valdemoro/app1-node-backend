@@ -4,8 +4,35 @@ const router = express.Router();
 
 const authorization = require('../../../utils/middleware/authorization');
 const userController = require('./user.controller');
+const userBillingController = require('../UserBilling/userBilling.controller');
 const middleware = require('./user.middleware');
 const validator = require('./user.validator');
+const userBillingValidator = require('../UserBilling/userBilling.validator');
+
+// Ver datos fiscales de un usuario
+router.get(
+  '/:userUuid/billing',
+  authorization('userBillings:view'),
+  middleware.loadUser,
+  userBillingController.getUserBilling,
+);
+// Crear datos fiscales de un usuario
+router.post(
+  '/:userUuid/billing',
+  authorization('userBillings:create'),
+  middleware.loadUser,
+  userBillingValidator.createUserBilling,
+  userBillingController.createUserBilling,
+);
+
+// Actualizar los datos fiscales de un usuario
+router.put(
+  '/:userUuid/billing',
+  authorization('userBillings:update'),
+  userBillingValidator.putUserBilling,
+  middleware.loadUser,
+  userBillingController.putUserBilling,
+);
 
 // Ver un usuario
 router.get('/:userUuid', authorization('users:view'), middleware.loadUser, userController.getUser);
