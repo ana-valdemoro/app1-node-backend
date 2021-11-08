@@ -68,7 +68,42 @@ const createUserBilling = async (req, res, next) => {
   res.status(201).json(billingService.toPublic(userBilling));
 };
 
+const putUserBilling = async (req, res, next) => {
+  let user;
+  if (res.locals && res.locals.user) {
+    user = res.locals.user;
+    const { billing } = user;
+    if (billing === null) {
+      return next(boom.notFound('El usuario no tiene datos fiscales creados'));
+    }
+  }
+
+  const billingData = req.body;
+  let response;
+  try {
+    const billingId = user.billing_id;
+    delete billingData.uuid;
+    response = await billingService.putUserBilling(billingId, billingData);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badData(error.message));
+  }
+
+  try {
+    await activityService.createActivity({
+      action: activityActions.UPDATE_USER_BILLING,
+      author: req.user.email,
+      elementBefore: JSON.stringify(user.toJSON()),
+      elementAfter: JSON.stringify(response.toJSON()),
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+  }
+
+  res.json(userService.toPublic(response));
+};
 module.exports = {
   getUserBilling,
   createUserBilling,
+  putUserBilling,
 };

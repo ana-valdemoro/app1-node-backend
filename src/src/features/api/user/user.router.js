@@ -25,6 +25,15 @@ router.post(
   userBillingController.createUserBilling,
 );
 
+// Actualizar los datos fiscales de un usuario
+router.put(
+  '/:userUuid/billing',
+  authorization('userBillings:update'),
+  userBillingValidator.putUserBilling,
+  middleware.loadUser,
+  userBillingController.putUserBilling,
+);
+
 // Ver un usuario
 router.get('/:userUuid', authorization('users:view'), middleware.loadUser, userController.getUser);
 

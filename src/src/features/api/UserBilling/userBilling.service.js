@@ -7,7 +7,18 @@ const createUserBilling = async (data) => {
   return userBilling.save();
 };
 
+const getUserBilling = async (uuid) => {
+  console.log(uuid);
+  return UserBilling.findOne({ where: { uuid } });
+};
+
+const putUserBilling = async (uuid, data) => {
+  const user = await getUserBilling(uuid);
+  return user.update(data);
+};
+
 module.exports = {
   toPublic,
   createUserBilling,
+  putUserBilling,
 };
