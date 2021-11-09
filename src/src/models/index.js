@@ -5,12 +5,14 @@ const Activity = require('./activity');
 const User = require('./user');
 const UserGroup = require('./userGroup');
 const UserBilling = require('./userBilling');
+const Product = require('./product');
 
 const models = {
   Activity: Activity.init(Sequelize, sequelize),
   User: User.init(Sequelize, sequelize),
   UserGroup: UserGroup.init(Sequelize, sequelize),
   UserBilling: UserBilling.init(Sequelize, sequelize),
+  Product: Product.init(Sequelize, sequelize),
 };
 
 Object.values(models)
