@@ -1,6 +1,6 @@
 const { Sequelize, Model } = require('sequelize');
 
-class Product extends Model {
+class ProductLine extends Model {
   static init(sequelize, DataTypes) {
     return super.init(
       {
@@ -9,7 +9,7 @@ class Product extends Model {
           defaultValue: Sequelize.UUIDV4,
           primaryKey: true,
         },
-        name: {
+        productName: {
           type: DataTypes.STRING,
           allowNull: false,
         },
@@ -27,12 +27,12 @@ class Product extends Model {
         sequelize,
         timestamps: true,
         underscored: true,
-        modelName: 'Product',
+        modelName: 'ProductLine',
         defaultScope: {
           include: [
             {
               all: true,
-              nested: true,
+              nested: false,
             },
           ],
         },
@@ -41,8 +41,9 @@ class Product extends Model {
   }
 
   static associate(models) {
-    this.hasMany(models.ProductLine);
+    this.order = this.belongsTo(models.Order, { as: 'order', foreignKey: 'order_uuid' });
+    this.product = this.belongsTo(models.Product, { as: 'product', foreignKey: 'product_uuid' });
   }
 }
 
-module.exports = Product;
+module.exports = ProductLine;
