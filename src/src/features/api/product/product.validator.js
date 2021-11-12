@@ -5,7 +5,7 @@ const createProduct = validate(
   {
     body: joi.object({
       // eslint-disable-next-line newline-per-chained-call
-      name: joi.string().alphanum().min(2).max(34).required(),
+      name: joi.string().min(2).max(34).required(),
       price: joi.number().precision(2).positive().required(),
     }),
   },
@@ -30,7 +30,7 @@ const putProduct = validate(
   {
     body: joi.object({
       // eslint-disable-next-line newline-per-chained-call
-      name: joi.string().alphanum().min(2).max(34).required(),
+      name: joi.string().min(2).max(34).required(),
       price: joi.number().precision(2).positive().required(),
     }),
   },
