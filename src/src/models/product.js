@@ -39,10 +39,6 @@ class Product extends Model {
       },
     );
   }
-
-  static associate(models) {
-    this.hasMany(models.ProductLine);
-  }
 }
 
 module.exports = Product;

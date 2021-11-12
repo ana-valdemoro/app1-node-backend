@@ -35,9 +35,9 @@ module.exports = {
         },
         allowNull: false,
       },
-      state: {
-        type: DataTypes.STRING,
-        defaultValue: 'waiting',
+      status: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
         allowNull: false,
       },
     });

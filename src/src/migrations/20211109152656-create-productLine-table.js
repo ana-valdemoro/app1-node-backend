@@ -14,6 +14,10 @@ module.exports = {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
       },
+      product_uuid: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       deleted: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -31,7 +35,7 @@ module.exports = {
           model: {
             tableName: 'orders',
           },
-          key: '',
+          key: 'uuid',
           allowNull: false,
         },
       },

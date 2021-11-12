@@ -15,14 +15,26 @@ const getProduct = async (uuid) => {
 };
 
 const createProduct = async (data) => {
-  const dataToCreate = { ...data, token: '' };
-  const product = await Product.create(dataToCreate);
+  const product = await Product.create(data);
   return product.save();
 };
 
 const putProduct = async (uuid, data) => {
   const product = await getProduct(uuid);
   return product.update(data);
+};
+
+const getListProductsByUuid = async (uuids) => {
+  let products;
+  uuids.forEach(async (uuid) => {
+    try {
+      const productBBDD = await this.getProduct(uuid);
+      products.push(productBBDD.dataValues);
+    } catch (error) {
+      // logger.error(`${error}`);
+      // return next(boom.notFound(`producto no encontrado ${error.message}`));
+    }
+  });
 };
 
 const deleteProduct = async (product) => product.destroy();
@@ -34,4 +46,5 @@ module.exports = {
   createProduct,
   deleteProduct,
   putProduct,
+  getListProductsByUuid,
 };

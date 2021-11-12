@@ -1,6 +1,11 @@
 const { Order } = require('../../../models');
 const userService = require('../user/user.service');
 const logger = require('../../../config/winston');
+
+const ORDER_STATUS_WAITING = 0;
+const ORDER_STATUS_PROCESSING = 1;
+const ORDER_STATUS_CANCELED = 2;
+
 const toPublic = (order) => order.toJSON();
 
 const getOrders = (filters, options) =>
@@ -23,8 +28,7 @@ const getOrder = async (uuid) => {
 };
 
 const createOrder = async (data) => {
-  const dataToCreate = { ...data, token: '' };
-  const product = await Order.create(dataToCreate);
+  const product = await Order.create(data);
   return product.save();
 };
 
@@ -33,4 +37,7 @@ module.exports = {
   getOrders,
   getOrder,
   createOrder,
+  ORDER_STATUS_WAITING,
+  ORDER_STATUS_PROCESSING,
+  ORDER_STATUS_CANCELED,
 };

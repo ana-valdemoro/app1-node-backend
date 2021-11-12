@@ -74,6 +74,8 @@ class User extends Model {
   static associate(models) {
     this.role = this.belongsTo(models.UserGroup, { as: 'role', foreignKey: 'role_uuid' });
     this.billing = this.belongsTo(models.UserBilling, { as: 'billing', foreignKey: 'billing_id' });
+    // Esto es opcional
+    // this.orders = this.hasMany(models.Order, { as: 'orders' });
   }
 
   validPassword(password) {

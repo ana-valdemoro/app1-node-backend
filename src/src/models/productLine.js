@@ -17,6 +17,10 @@ class ProductLine extends Model {
           type: DataTypes.DECIMAL(10, 2),
           allowNull: false,
         },
+        productUuid: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
         deleted: {
           type: DataTypes.BOOLEAN,
           defaultValue: false,
@@ -28,21 +32,12 @@ class ProductLine extends Model {
         timestamps: true,
         underscored: true,
         modelName: 'ProductLine',
-        defaultScope: {
-          include: [
-            {
-              all: true,
-              nested: false,
-            },
-          ],
-        },
       },
     );
   }
 
   static associate(models) {
     this.order = this.belongsTo(models.Order, { as: 'order', foreignKey: 'order_uuid' });
-    this.product = this.belongsTo(models.Product, { as: 'product', foreignKey: 'product_uuid' });
   }
 }
 

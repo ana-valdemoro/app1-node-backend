@@ -1,4 +1,5 @@
 const { Sequelize, Model } = require('sequelize');
+const ProductLine = require('./productLine');
 
 class Order extends Model {
   static init(sequelize, DataTypes) {
@@ -22,9 +23,9 @@ class Order extends Model {
           defaultValue: false,
           allowNull: false,
         },
-        state: {
-          type: DataTypes.STRING,
-          defaultValue: 'waiting',
+        status: {
+          type: DataTypes.INTEGER,
+          defaultValue: 0,
           allowNull: false,
         },
       },
@@ -33,12 +34,18 @@ class Order extends Model {
         timestamps: true,
         underscored: true,
         modelName: 'Order',
+        defaultScope: {
+          include: [{ model: ProductLine, as: 'productLines', required: true }],
+        },
       },
     );
   }
 
   static associate(models) {
     this.user = this.belongsTo(models.User, { as: 'user', foreignKey: 'user_uuid' });
+    this.productLines = this.hasMany(models.ProductLine, {
+      as: 'productLines',
+    });
   }
 }
 
