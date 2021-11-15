@@ -1,6 +1,4 @@
 const { Order } = require('../../../models');
-const userService = require('../user/user.service');
-const logger = require('../../../config/winston');
 
 const ORDER_STATUS_WAITING = 0;
 const ORDER_STATUS_PROCESSING = 1;
@@ -13,19 +11,7 @@ const getOrders = (filters, options) =>
     where: filters,
     order: options.order,
   });
-const getOrder = async (uuid) => {
-  const order = await Order.findOne({ where: { uuid } });
-  try {
-    const user = await userService.getUser(order.user_uuid);
-    if (user) {
-      order.dataValues.user = user;
-    }
-  } catch (error) {
-    logger.error(`${error}`);
-  }
-
-  return order;
-};
+const getOrder = async (uuid) => Order.findOne({ where: { uuid } });
 
 const createOrder = async (data) => {
   const order = await Order.create(data);

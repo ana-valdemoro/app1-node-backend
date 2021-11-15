@@ -2,6 +2,7 @@ const boom = require('@hapi/boom');
 const orderService = require('./order.service');
 const productLineService = require('../productLine/productLine.service');
 const productService = require('../product/product.service');
+const userService = require('../user/user.service');
 const queryOptions = require('../../../utils/queryOptions');
 const orderFilters = require('./order.filters');
 const logger = require('../../../config/winston');
@@ -20,9 +21,21 @@ const listOrders = async (req, res, next) => {
   }
 };
 const getOrder = async (req, res, next) => {
+  let order;
+  let user;
   try {
     if (res.locals && res.locals.order) {
-      return res.json(await orderService.toPublic(res.locals.order));
+      order = await orderService.toPublic(res.locals.order);
+      console.log(order);
+      try {
+        user = await userService.getUser(order.user_uuid);
+      } catch (error) {
+        logger.error(`No existe usuairo de pedido ${error}`);
+      }
+      if (user) {
+        order.user = await userService.toPublic(user);
+      }
+      return res.json(order);
     }
     return next(boom.notFound('Order no encontrada'));
   } catch (error) {
