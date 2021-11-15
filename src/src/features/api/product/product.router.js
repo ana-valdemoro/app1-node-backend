@@ -31,7 +31,7 @@ router.delete(
   middleware.loadProduct,
   productController.deleteProduct,
 );
-// Editar un usuario
+// Editar un producto
 router.put(
   '/:productUuid',
   authorization('products:update'),

@@ -28,6 +28,10 @@ class Order extends Model {
           defaultValue: 0,
           allowNull: false,
         },
+        customerCancellationMessage: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
       },
       {
         sequelize,

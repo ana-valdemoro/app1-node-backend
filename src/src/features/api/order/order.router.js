@@ -1,6 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
+const { authorize } = require('passport');
 const middleware = require('./order.middleware');
 const validator = require('./order.validator');
 const authorization = require('../../../utils/middleware/authorization');
@@ -15,6 +16,15 @@ router.get(
 );
 // ver todos los pedidods
 router.get('/', authorization('orders:view'), orderController.listOrders);
+
+// Cancelar un pedido en espera
+router.post(
+  '/:orderUuid/cancel',
+  authorization('orders:create'),
+  validator.cancelOrder,
+  middleware.loadOrder,
+  orderController.cancelOrder,
+);
 
 // Crear un pedido
 router.post(

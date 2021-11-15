@@ -62,10 +62,7 @@ const getUsers = async (filters, options) =>
 
 const getUserByEmail = async (email) => User.findOne({ where: { email } });
 
-const getUser = async (uuid) => {
-  console.log(uuid);
-  return User.findOne({ where: { uuid } });
-};
+const getUser = async (uuid) => User.findOne({ where: { uuid } });
 
 const createUser = async (data) => {
   const dataToCreate = { ...data, token: '' };

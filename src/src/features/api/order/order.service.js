@@ -28,8 +28,24 @@ const getOrder = async (uuid) => {
 };
 
 const createOrder = async (data) => {
-  const product = await Order.create(data);
-  return product.save();
+  const order = await Order.create(data);
+  return order.save();
+};
+
+const putOrder = async (uuid, data) => {
+  const order = await getOrder(uuid);
+  return order.update(data);
+};
+
+const cancelOrder = async (uuid, cancellationMessage) => {
+  const data = {
+    status: ORDER_STATUS_CANCELED,
+  };
+  if (cancellationMessage && cancellationMessage !== '') {
+    data.customerCancellationMessage = cancellationMessage;
+  }
+
+  return putOrder(uuid, data);
 };
 
 module.exports = {
@@ -40,4 +56,5 @@ module.exports = {
   ORDER_STATUS_WAITING,
   ORDER_STATUS_PROCESSING,
   ORDER_STATUS_CANCELED,
+  cancelOrder,
 };

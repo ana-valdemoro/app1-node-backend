@@ -108,8 +108,24 @@ const createOrder = async (req, res, next) => {
   res.status(201).json(orderService.toPublic(order));
 };
 
+const cancelOrder = async (req, res, next) => {
+  let { order } = res.locals;
+  const { cancellationMessage } = req.body;
+
+  if (order.status !== orderService.ORDER_STATUS_WAITING) {
+    return next(boom.badData('No se puede cancelar un pedido que no este parado.'));
+  }
+  try {
+    order = await orderService.cancelOrder(order.uuid, cancellationMessage);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badData(error.message));
+  }
+  return res.json(await orderService.toPublic(order));
+};
 module.exports = {
   listOrders,
   getOrder,
   createOrder,
+  cancelOrder,
 };
