@@ -63,7 +63,7 @@ const createOrder = async (req, res, next) => {
       // eslint-disable-next-line no-await-in-loop
       const productBBDD = await productService.getProduct(productUuid);
       products.push(productBBDD.dataValues);
-      totalPrice += products.price;
+      totalPrice = parseFloat(totalPrice) + parseFloat(productBBDD.price);
     }
   } catch (error) {
     logger.error(`${error}`);
