@@ -9,10 +9,7 @@ const getProducts = (filters, options) =>
     order: options.order,
   });
 
-const getProduct = async (uuid) => {
-  console.log(uuid);
-  return Product.findOne({ where: { uuid } });
-};
+const getProduct = async (uuid) => Product.findOne({ where: { uuid } });
 
 const createProduct = async (data) => {
   const product = await Product.create(data);
@@ -24,19 +21,6 @@ const putProduct = async (uuid, data) => {
   return product.update(data);
 };
 
-const getListProductsByUuid = async (uuids) => {
-  let products;
-  uuids.forEach(async (uuid) => {
-    try {
-      const productBBDD = await this.getProduct(uuid);
-      products.push(productBBDD.dataValues);
-    } catch (error) {
-      // logger.error(`${error}`);
-      // return next(boom.notFound(`producto no encontrado ${error.message}`));
-    }
-  });
-};
-
 const deleteProduct = async (product) => product.destroy();
 
 module.exports = {
@@ -46,5 +30,4 @@ module.exports = {
   createProduct,
   deleteProduct,
   putProduct,
-  getListProductsByUuid,
 };

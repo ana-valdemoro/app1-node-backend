@@ -26,7 +26,6 @@ const getOrder = async (req, res, next) => {
   try {
     if (res.locals && res.locals.order) {
       order = await orderService.toPublic(res.locals.order);
-      console.log(order);
       try {
         user = await userService.getUser(order.user_uuid);
       } catch (error) {

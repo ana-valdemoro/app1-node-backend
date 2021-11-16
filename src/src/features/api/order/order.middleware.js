@@ -11,11 +11,9 @@ async function loadOrder(req, res, next) {
 
   try {
     order = await service.getOrder(orderUuid);
-    console.log(order);
   } catch (error) {
     return next(boom.notFound('Pedido no encontrado'));
   }
-  console.log('Aqui tbn peta');
   if (!order) return next(boom.notFound('Pedido no encontrado'));
 
   res.locals.order = order;
