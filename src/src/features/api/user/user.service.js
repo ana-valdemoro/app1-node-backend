@@ -51,14 +51,7 @@ const recoveryPassword = async (token, data) => {
 };
 
 const getUsers = async (filters, options) =>
-  User.findAll({ where: filters, order: options.order })
-    .then((result) => {
-      console.log(result);
-      return result;
-    })
-    .catch((err) => {
-      throw new Error(err.message);
-    });
+  User.scope('withBilling').findAll({ where: filters, order: options.order });
 
 const getUserByEmail = async (email) => User.findOne({ where: { email } });
 

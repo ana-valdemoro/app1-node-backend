@@ -1,6 +1,8 @@
 /* eslint-disable no-param-reassign */
 const bcrypt = require('bcrypt');
 const { Sequelize, Model } = require('sequelize');
+const UserGroup = require('./userGroup');
+const UserBilling = require('./userBilling');
 const jwt = require('../utils/middleware/jwt');
 
 class User extends Model {
@@ -66,6 +68,14 @@ class User extends Model {
               nested: true,
             },
           ],
+        },
+        scopes: {
+          withBilling: {
+            include: [
+              { model: UserGroup, as: 'role' },
+              { model: UserBilling, as: 'billing', required: true },
+            ],
+          },
         },
       },
     );
