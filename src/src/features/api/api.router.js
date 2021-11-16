@@ -30,7 +30,6 @@ module.exports = (app) => {
   );
   app.use(
     `/${tag}/products`,
-    authorize,
     // eslint-disable-next-line global-require
     require('./product/product.router'),
   );
