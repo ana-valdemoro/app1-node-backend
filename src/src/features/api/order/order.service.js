@@ -37,6 +37,7 @@ const cancelOrder = async (uuid, cancellationMessage) => {
 
   return putOrder(uuid, data);
 };
+const deleteOrder = async (order) => order.destroy();
 
 module.exports = {
   toPublic,
@@ -47,4 +48,6 @@ module.exports = {
   ORDER_STATUS_PROCESSING,
   ORDER_STATUS_CANCELED,
   cancelOrder,
+  deleteOrder,
+  putOrder,
 };

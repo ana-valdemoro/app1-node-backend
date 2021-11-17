@@ -7,7 +7,10 @@ const createProductLine = async (data) => {
   return productLine.save();
 };
 
+const deleteProductLine = async (productLine) => productLine.destroy();
+
 module.exports = {
   toPublic,
   createProductLine,
+  deleteProductLine,
 };
