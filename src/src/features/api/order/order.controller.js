@@ -89,7 +89,7 @@ const createOrder = async (req, res, next) => {
       const productLineToCreate = {
         productName: productBBDD.name,
         price: productBBDD.price,
-        orderUuid,
+        order_uuid: orderUuid,
         productUuid: productBBDD.uuid,
       };
       // eslint-disable-next-line no-await-in-loop
