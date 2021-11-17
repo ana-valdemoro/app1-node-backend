@@ -27,8 +27,12 @@ const cancelOrder = async (uuid, cancellationMessage) => {
   const data = {
     status: ORDER_STATUS_CANCELED,
   };
-  if (cancellationMessage && cancellationMessage !== '') {
-    data.customerCancellationMessage = cancellationMessage;
+  let message;
+  if (cancellationMessage) {
+    message = cancellationMessage.trim();
+    if (message !== '') {
+      data.customerCancellationMessage = message;
+    }
   }
 
   return putOrder(uuid, data);
