@@ -78,7 +78,8 @@ const createOrder = async (req, res, next) => {
     logger.error(`${error}`);
     return next(boom.badData(error.message));
   }
-
+  const orderUuid = order.uuid;
+  delete order.uuid;
   // Obtenemos la lista de productos
   try {
     // eslint-disable-next-line no-restricted-syntax
@@ -88,42 +89,20 @@ const createOrder = async (req, res, next) => {
       const productLineToCreate = {
         productName: productBBDD.name,
         price: productBBDD.price,
-        order_uuid: order.uuid,
+        orderUuid,
         productUuid: productBBDD.uuid,
       };
       // eslint-disable-next-line no-await-in-loop
       productsLine.push(await productLineService.createProductLine(productLineToCreate));
       totalPrice = parseFloat(totalPrice) + parseFloat(productBBDD.price);
     }
-    delete order.uuid;
-    order = await orderService.putOrder(order.uuid, { ...order, totalPrice });
+    order = await orderService.putOrder(orderUuid, { ...order, totalPrice });
   } catch (error) {
     logger.error(`${error}`);
     await undoOrderCreation(productsLine, order);
     return next(boom.badData(error.message));
   }
 
-  // // Creamos las lineas de productos
-  // try {
-  //   // eslint-disable-next-line no-restricted-syntax
-  //   for (const product of products) {
-  //     const productLineToCreate = {
-  //       productName: product.name,
-  //       price: product.price,
-  //       order_uuid: order.uuid,
-  //       productUuid: product.uuid,
-  //     };
-  //     // eslint-disable-next-line no-await-in-loop
-  //     await productLineService.createProductLine(productLineToCreate);
-  //   }
-  // } catch (error) {
-  //   logger.error(`${error}`);
-  //   return next(
-  //     boom.notFound(`Error guardando las promesas de linaeas de productos ${error.message}`),
-  //   );
-  // }
-
-  // Creamos un registro de la actividad que hemos realizado
   try {
     await activityService.createActivity({
       action: activityActions.CREATE_ORDER,
