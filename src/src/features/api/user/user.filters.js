@@ -21,6 +21,8 @@ module.exports = (params) => {
         [Op.like]: `%${params.name}%`,
       },
     });
+  }
+  if (orConditions.length !== 0) {
     query[Op.or] = orConditions;
   }
   query.deleted = { [Op.ne]: true };
