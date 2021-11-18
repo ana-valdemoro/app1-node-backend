@@ -58,16 +58,15 @@ const createOrder = async (req, res, next) => {
   let user;
   const { productsUuid } = req.body;
   const productsLine = [];
-  let totalPrice = 0;
+  let totalPrice = 0.0;
   // Obtenemos el usuario
   if (req.user) {
     user = req.user;
   }
   const orderData = {
     address: req.body.address,
-    status: orderService.ORDER_STATUS_WAITING,
     user_uuid: user.uuid,
-    totalPrice: 0,
+    totalPrice,
   };
 
   // Creamos la order
@@ -94,7 +93,7 @@ const createOrder = async (req, res, next) => {
       };
       // eslint-disable-next-line no-await-in-loop
       productsLine.push(await productLineService.createProductLine(productLineToCreate));
-      totalPrice = parseFloat(totalPrice) + parseFloat(productBBDD.price);
+      totalPrice += parseFloat(productBBDD.price);
     }
     order = await orderService.putOrder(orderUuid, { ...order, totalPrice });
   } catch (error) {
