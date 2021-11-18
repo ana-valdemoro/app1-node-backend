@@ -52,14 +52,15 @@ class User extends Model {
               bcrypt.hashSync(attributes.get('password', { plain: true }), bcrypt.genSaltSync(10)),
             );
           },
-          beforeUpdate(instance) {
-            if (instance.changed() && instance.changed().indexOf('password')) {
-              instance.set(
-                'password',
-                bcrypt.hashSync(instance.get('password', { plain: true }), bcrypt.genSaltSync(10)),
-              );
-            }
-          },
+          // beforeUpdate(instance) {
+          //   if (instance.changed() && instance.changed().indexOf('password')) {
+          //     instance.set(
+          //       'password',
+          // eslint-disable-next-line max-len
+          //       bcrypt.hashSync(instance.get('password', { plain: true }), bcrypt.genSaltSync(10)),
+          //     );
+          //   }
+          // },
         },
         defaultScope: {
           include: [
