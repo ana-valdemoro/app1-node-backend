@@ -1,7 +1,7 @@
 const boom = require('@hapi/boom');
 const { cloneDeep } = require('lodash');
 
-const { UniqueConstraintError } = require('sequelize');
+const { UniqueConstraintError, Op } = require('sequelize');
 
 const userService = require('./user.service');
 const activityService = require('../activity/activity.service');
@@ -130,11 +130,14 @@ const listUsers = async (req, res, next) => {
   try {
     const filters = userFilters(req.query);
     const options = queryOptions(req.query);
-
+    console.log(filters);
     options.select = { password: false, _id: false };
     options.leanWithId = false;
 
-    res.json(await userService.getUsers(filters, options));
+    if (req.query.name) {
+      return res.json(await userService.getUsersWithUserBillingFilter(filters, options));
+    }
+    return res.json(await userService.getUsers(filters, options));
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));

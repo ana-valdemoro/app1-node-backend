@@ -49,9 +49,10 @@ const recoveryPassword = async (token, data) => {
   const user = await User.findOne({ where: { uuid: payload.uuid } });
   return user.update(data);
 };
-
-const getUsers = async (filters, options) =>
+const getUsersWithUserBillingFilter = async (filters, options) =>
   User.scope('withBilling').findAll({ where: filters, order: options.order });
+
+const getUsers = async (filters, options) => User.findAll({ where: filters, order: options.order });
 
 const getUserByEmail = async (email) => User.findOne({ where: { email } });
 
@@ -83,4 +84,5 @@ module.exports = {
   getUser,
   putUser,
   deleteUser,
+  getUsersWithUserBillingFilter,
 };
