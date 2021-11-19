@@ -55,17 +55,14 @@ async function undoOrderCreation(productLines, order) {
   }
 }
 const createOrder = async (req, res, next) => {
-  let user;
+  const userUuid = req.body.userUuid ? req.body.userUuid : req.user.uuid;
   const { productsUuid } = req.body;
   const productsLine = [];
   let totalPrice = 0.0;
-  // Obtenemos el usuario
-  if (req.user) {
-    user = req.user;
-  }
   const orderData = {
     address: req.body.address,
-    user_uuid: user.uuid,
+    status: orderService.ORDER_STATUS_WAITING,
+    user_uuid: userUuid,
     totalPrice,
   };
 
