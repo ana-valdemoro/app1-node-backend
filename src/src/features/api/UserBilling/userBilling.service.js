@@ -14,8 +14,11 @@ const putUserBilling = async (uuid, data) => {
   return user.update(data);
 };
 
+const deleteUserBilling = async (userBilling) => userBilling.destroy();
+
 module.exports = {
   toPublic,
   createUserBilling,
   putUserBilling,
+  deleteUserBilling,
 };

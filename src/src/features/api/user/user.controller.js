@@ -1,7 +1,7 @@
 const boom = require('@hapi/boom');
 const { cloneDeep } = require('lodash');
 
-const { UniqueConstraintError, Op } = require('sequelize');
+const { UniqueConstraintError } = require('sequelize');
 
 const userService = require('./user.service');
 const activityService = require('../activity/activity.service');

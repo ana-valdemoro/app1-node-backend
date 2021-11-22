@@ -31,7 +31,18 @@ const putUserBilling = validate(
   },
 );
 
+const deleteUserBilling = validate(
+  {
+    body: joi.object({}),
+  },
+  {
+    context: false,
+    statusCode: 422,
+    keyByField: true,
+  },
+);
 module.exports = {
   createUserBilling,
   putUserBilling,
+  deleteUserBilling,
 };

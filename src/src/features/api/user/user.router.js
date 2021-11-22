@@ -33,6 +33,14 @@ router.put(
   middleware.loadUser,
   userBillingController.putUserBilling,
 );
+// Eliminar los datos fiscales de un usuario
+router.delete(
+  '/:userUuid/billing',
+  authorization('userBillings:delete'),
+  userBillingValidator.deleteUserBilling,
+  middleware.loadUser,
+  userBillingController.deleteUserBilling,
+);
 
 // Ver un usuario
 router.get('/:userUuid', authorization('users:view'), middleware.loadUser, userController.getUser);

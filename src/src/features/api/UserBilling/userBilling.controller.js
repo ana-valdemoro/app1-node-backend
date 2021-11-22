@@ -1,5 +1,6 @@
 const boom = require('@hapi/boom');
 const { UniqueConstraintError } = require('sequelize');
+const { cloneDeep } = require('lodash');
 const billingService = require('./userBilling.service');
 const logger = require('../../../config/winston');
 const activityService = require('../activity/activity.service');
@@ -102,8 +103,57 @@ const putUserBilling = async (req, res, next) => {
 
   res.json(userService.toPublic(response));
 };
+
+const deleteUserBilling = async (req, res, next) => {
+  const { user } = res.locals;
+  const { billing } = user;
+  if (billing === null) {
+    return next(boom.notFound('El usuario no tiene datos fiscales que eliminar'));
+  }
+  try {
+    await userService.putUser(res.locals.user.uuid, {
+      billing_id: null,
+    });
+  } catch (error) {
+    if (error instanceof UniqueConstraintError) {
+      return next(boom.badData(error));
+    }
+    logger.error(`${error}`);
+    return next(boom.badData(error.message));
+  }
+
+  const billingBeforeDelete = cloneDeep(billing);
+
+  try {
+    await billingService.deleteUserBilling(billing);
+  } catch (error) {
+    logger.error(`${error}`);
+    // Hacemos roll back
+    try {
+      await userService.putUser(res.locals.user.uuid, {
+        billing_id: billingBeforeDelete.uuid,
+      });
+    } catch (rollBackError) {
+      logger.error(`${rollBackError}`);
+    }
+    return next(boom.badImplementation(error.message));
+  }
+
+  try {
+    await activityService.createActivity({
+      action: activityActions.DELETE_USER_BILLING,
+      author: req.user.toJSON(),
+      elementBefore: billingBeforeDelete.toJSON(),
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+  }
+
+  res.status(204).json({});
+};
 module.exports = {
   getUserBilling,
   createUserBilling,
   putUserBilling,
+  deleteUserBilling,
 };
