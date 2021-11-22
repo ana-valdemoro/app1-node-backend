@@ -61,7 +61,6 @@ const createOrder = async (req, res, next) => {
   let totalPrice = 0.0;
   const orderData = {
     address: req.body.address,
-    status: orderService.ORDER_STATUS_WAITING,
     user_uuid: userUuid,
     totalPrice,
   };
