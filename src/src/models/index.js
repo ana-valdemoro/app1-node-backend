@@ -8,6 +8,8 @@ const UserBilling = require('./userBilling');
 const Product = require('./product');
 const Order = require('./order');
 const ProductLine = require('./productLine');
+const Cart = require('./cart');
+const ProductCart = require('./productCart');
 
 const models = {
   Activity: Activity.init(Sequelize, sequelize),
@@ -17,6 +19,8 @@ const models = {
   Product: Product.init(Sequelize, sequelize),
   Order: Order.init(Sequelize, sequelize),
   ProductLine: ProductLine.init(Sequelize, sequelize),
+  Cart: Cart.init(Sequelize, sequelize),
+  ProductCart: ProductCart.init(Sequelize, sequelize),
 };
 
 Object.values(models)

@@ -1,6 +1,8 @@
 const { Sequelize, Model } = require('sequelize');
+const Product = require('./product');
+const Cart = require('./cart');
 
-class Product extends Model {
+class ProductCart extends Model {
   static init(sequelize, DataTypes) {
     return super.init(
       {
@@ -8,14 +10,6 @@ class Product extends Model {
           type: DataTypes.UUID,
           defaultValue: Sequelize.UUIDV4,
           primaryKey: true,
-        },
-        name: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
-        price: {
-          type: DataTypes.DECIMAL(10, 2),
-          allowNull: false,
         },
         deleted: {
           type: DataTypes.BOOLEAN,
@@ -27,25 +21,22 @@ class Product extends Model {
         sequelize,
         timestamps: true,
         underscored: true,
-        modelName: 'Product',
+        tableName: 'product_cart',
         defaultScope: {
           include: [
-            {
-              all: true,
-              nested: true,
-            },
+            { model: Product, as: 'products' },
+            { model: Cart, as: 'carts' },
           ],
         },
       },
     );
   }
 
-  static associate(models) {
-    this.productCart = this.belongsToMany(models.Cart, {
-      through: models.ProductCart,
-      foreignKey: 'product_uuid',
-    });
-  }
+  // static associate(models) {
+  //   this.cart = this.belongsTo(models.Cart, { foreignKey: 'cart_uuid', as: 'carts' });
+  // eslint-disable-next-line max-len
+  //   this.product = this.belongsTo(models.Product, { foreignKey: 'product_uuid', as: 'products' });
+  // }
 }
 
-module.exports = Product;
+module.exports = ProductCart;

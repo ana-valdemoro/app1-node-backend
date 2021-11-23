@@ -39,4 +39,10 @@ module.exports = (app) => {
     // eslint-disable-next-line global-require
     require('./order/order.router'),
   );
+  app.use(
+    `/${tag}/carts`,
+    authorize,
+    // eslint-disable-next-line global-require
+    require('./cart/cart.router'),
+  );
 };

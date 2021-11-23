@@ -1,6 +1,9 @@
 const { Sequelize, Model } = require('sequelize');
+const Product = require('./product');
+const User = require('./user');
+// const ProductCart = require('./productCart');
 
-class Product extends Model {
+class Cart extends Model {
   static init(sequelize, DataTypes) {
     return super.init(
       {
@@ -9,17 +12,14 @@ class Product extends Model {
           defaultValue: Sequelize.UUIDV4,
           primaryKey: true,
         },
-        name: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
-        price: {
-          type: DataTypes.DECIMAL(10, 2),
-          allowNull: false,
-        },
         deleted: {
           type: DataTypes.BOOLEAN,
           defaultValue: false,
+          allowNull: false,
+        },
+        status: {
+          type: DataTypes.INTEGER,
+          defaultValue: 0,
           allowNull: false,
         },
       },
@@ -27,13 +27,10 @@ class Product extends Model {
         sequelize,
         timestamps: true,
         underscored: true,
-        modelName: 'Product',
         defaultScope: {
           include: [
-            {
-              all: true,
-              nested: true,
-            },
+            { model: User, as: 'user' },
+            { model: Product, as: 'products' },
           ],
         },
       },
@@ -41,11 +38,12 @@ class Product extends Model {
   }
 
   static associate(models) {
-    this.productCart = this.belongsToMany(models.Cart, {
+    this.user = this.belongsTo(models.User, { as: 'user', foreignKey: 'user_uuid' });
+    this.productCart = this.belongsToMany(models.Product, {
       through: models.ProductCart,
-      foreignKey: 'product_uuid',
+      foreignKey: 'cart_uuid',
     });
   }
 }
 
-module.exports = Product;
+module.exports = Cart;
