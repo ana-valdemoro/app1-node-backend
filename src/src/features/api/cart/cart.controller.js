@@ -4,6 +4,8 @@ const logger = require('../../../config/winston');
 const activityService = require('../activity/activity.service');
 const activityActions = require('./cart.activity');
 const productCartService = require('../productCart/productCart.service');
+const queryOptions = require('../../../utils/queryOptions');
+const orderFilters = require('./cart.filters');
 
 async function undoCartCreation(productsInCart, order) {
   try {
@@ -38,8 +40,8 @@ const createCart = async (req, res, next) => {
   // eslint-disable-next-line no-restricted-syntax
   for (const productUuid of productsUuid) {
     const productCart = {
-      cart_uuid: cart.uuid,
-      product_uuid: productUuid,
+      CartUuid: cart.uuid,
+      ProductUuid: productUuid,
     };
     try {
       // eslint-disable-next-line no-await-in-loop
@@ -65,6 +67,18 @@ const createCart = async (req, res, next) => {
   res.status(201).json(cartService.toPublic(cart));
 };
 
+const listCarts = async (req, res, next) => {
+  try {
+    const filters = orderFilters(req.query);
+    const options = queryOptions(req.query);
+
+    return res.json(await cartService.getCarts(filters, options));
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+};
 module.exports = {
   createCart,
+  listCarts,
 };

@@ -24,19 +24,25 @@ class ProductCart extends Model {
         tableName: 'product_cart',
         defaultScope: {
           include: [
-            { model: Product, as: 'products' },
-            { model: Cart, as: 'carts' },
+            {
+              model: Product,
+            },
           ],
         },
       },
     );
   }
 
-  // static associate(models) {
-  //   this.cart = this.belongsTo(models.Cart, { foreignKey: 'cart_uuid', as: 'carts' });
-  // eslint-disable-next-line max-len
-  //   this.product = this.belongsTo(models.Product, { foreignKey: 'product_uuid', as: 'products' });
-  // }
+  static associate(models) {
+    this.cart = models.Product.belongsToMany(models.Cart, {
+      through: this,
+      foreignKey: 'ProductUuid',
+    });
+    this.product = models.Cart.belongsToMany(models.Product, {
+      through: this,
+      foreignKey: 'CartUuid',
+    });
+  }
 }
 
 module.exports = ProductCart;

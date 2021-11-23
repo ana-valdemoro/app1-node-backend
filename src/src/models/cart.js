@@ -1,7 +1,6 @@
 const { Sequelize, Model } = require('sequelize');
-const Product = require('./product');
 const User = require('./user');
-// const ProductCart = require('./productCart');
+const Product = require('./product');
 
 class Cart extends Model {
   static init(sequelize, DataTypes) {
@@ -28,10 +27,7 @@ class Cart extends Model {
         timestamps: true,
         underscored: true,
         defaultScope: {
-          include: [
-            { model: User, as: 'user' },
-            { model: Product, as: 'products' },
-          ],
+          include: [{ model: User, as: 'user' }, { model: Product }],
         },
       },
     );
@@ -41,7 +37,7 @@ class Cart extends Model {
     this.user = this.belongsTo(models.User, { as: 'user', foreignKey: 'user_uuid' });
     this.productCart = this.belongsToMany(models.Product, {
       through: models.ProductCart,
-      foreignKey: 'cart_uuid',
+      foreignKey: 'ProductUuid',
     });
   }
 }

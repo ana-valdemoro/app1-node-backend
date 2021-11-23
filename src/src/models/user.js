@@ -64,10 +64,8 @@ class User extends Model {
         },
         defaultScope: {
           include: [
-            {
-              all: true,
-              nested: true,
-            },
+            { model: UserGroup, as: 'role' },
+            { model: UserBilling, as: 'billing' },
           ],
         },
         scopes: {

@@ -28,14 +28,6 @@ class Product extends Model {
         timestamps: true,
         underscored: true,
         modelName: 'Product',
-        defaultScope: {
-          include: [
-            {
-              all: true,
-              nested: true,
-            },
-          ],
-        },
       },
     );
   }
@@ -43,7 +35,6 @@ class Product extends Model {
   static associate(models) {
     this.productCart = this.belongsToMany(models.Cart, {
       through: models.ProductCart,
-      foreignKey: 'product_uuid',
     });
   }
 }
