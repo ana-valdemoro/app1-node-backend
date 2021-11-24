@@ -27,7 +27,16 @@ class Cart extends Model {
         timestamps: true,
         underscored: true,
         defaultScope: {
-          include: [{ model: User, as: 'user' }, { model: Product }],
+          include: [
+            {
+              model: User,
+              as: 'user',
+              attributes: {
+                exclude: ['password'],
+              },
+            },
+            { model: Product },
+          ],
         },
       },
     );
