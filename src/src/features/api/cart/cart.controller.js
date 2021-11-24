@@ -1,4 +1,5 @@
 const boom = require('@hapi/boom');
+const { cloneDeep } = require('lodash');
 const cartService = require('./cart.service');
 const logger = require('../../../config/winston');
 const activityService = require('../activity/activity.service');
@@ -78,7 +79,121 @@ const listCarts = async (req, res, next) => {
     return next(boom.badImplementation(error.message));
   }
 };
+
+async function deleteProductsInCart(products) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const product of products) {
+    // eslint-disable-next-line no-await-in-loop
+    await productCartService.deleteProductInCart(product.ProductCart);
+  }
+}
+const getCart = async (req, res, next) => {
+  let cart;
+  try {
+    if (res.locals && res.locals.cart) {
+      cart = await cartService.toPublic(res.locals.cart);
+      return res.json(cart);
+    }
+    return next(boom.notFound('Cart no encontrada'));
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+};
+const deleteCart = async (req, res, next) => {
+  const { cart } = res.locals;
+  const cartBeforeDelete = cloneDeep(cart);
+
+  try {
+    await deleteProductsInCart(cart.Products);
+  } catch (error) {
+    logger.error(`No hemos podido eliminar los productos del carrito: ${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  try {
+    await cartService.deleteCart(cart);
+  } catch (error) {
+    logger.error(`No hemos podido eliminar el carrito: ${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  try {
+    await activityService.createActivity({
+      action: activityActions.DELETE_CART,
+      author: req.user.email,
+      elementBefore: JSON.stringify(cartBeforeDelete.toJSON()),
+      elementAfter: JSON.stringify({}),
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+  }
+
+  return res.status(204).json({});
+};
+async function addProductsInCart(products, cart) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const productUuid of products) {
+    const productInCart = {
+      CartUuid: cart.uuid,
+      ProductUuid: productUuid,
+    };
+    // eslint-disable-next-line no-await-in-loop
+    await productCartService.createProductInCart(productInCart);
+  }
+}
+
+const putCart = async (req, res, next) => {
+  let cart;
+  if (res.locals && res.locals.cart) {
+    // eslint-disable-next-line prefer-destructuring
+    cart = res.locals.cart;
+  }
+  const productsToAddToCart = req.body.productsUuid;
+  if (productsToAddToCart.length === 0) {
+    return deleteCart(req, res, next);
+  }
+  // Vacio los productos del carrito
+  try {
+    await deleteProductsInCart(cart.Products);
+  } catch (error) {
+    logger.error(`No hemos podido eliminar los productos del carrito: ${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  // Añadir nuevos productos al carrito
+  // eslint-disable-next-line no-restricted-syntax
+  try {
+    await addProductsInCart(productsToAddToCart, cart);
+  } catch (error) {
+    logger.error(`Ha habido un error al añadir los productos al carrito: ${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+  let response;
+  try {
+    response = await cartService.getCart(cart.uuid);
+  } catch (error) {
+    return next(boom.notFound('Carrito actualizado no encontrado'));
+  }
+
+  try {
+    await activityService.createActivity({
+      action: activityActions.UPDATE_CART,
+      author: req.user.email,
+      elementBefore: JSON.stringify(cart.toJSON()),
+      elementAfter: JSON.stringify(response),
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+  }
+
+  return res.json(cartService.toPublic(response));
+};
+
 module.exports = {
   createCart,
   listCarts,
+  getCart,
+  putCart,
+  deleteCart,
 };

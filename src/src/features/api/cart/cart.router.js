@@ -4,37 +4,33 @@ const router = express.Router();
 const validator = require('./cart.validator');
 const cartController = require('./cart.controller');
 const authorization = require('../../../utils/middleware/authorization');
+const middleware = require('./cart.middleware');
 
 // Listar los carritos
 router.get('/', authorization('cart:view'), cartController.listCarts);
 
 // Ver un carrito
-// router.get(
-//     '/:cartUuid',
-//     authorization('orders:view'),
-//     middleware.loadCart,
-//     cartController.getCart,
-//   );
+router.get('/:cartUuid', authorization('carts:view'), middleware.loadCart, cartController.getCart);
 
 // Crear un carrito
 router.post('/', authorization('cart:create'), validator.createCart, cartController.createCart);
 
 // Editar un carrito
-// router.put(
-//   '/:userUuid',
-//   authorization('users:update'),
-//   validator.putUser,
-//   middleware.loadUser,
-//   userController.putUser,
-// );
+router.put(
+  '/:cartUuid',
+  authorization('carts:update'),
+  validator.putCart,
+  middleware.loadCart,
+  cartController.putCart,
+);
 
 // // Borrar un carrito
-// router.delete(
-//   '/:userUuid',
-//   authorization('users:delete'),
-//   validator.deleteUser,
-//   middleware.loadUser,
-//   userController.deleteUser,
-// );
+router.delete(
+  '/:cartUuid',
+  authorization('carts:delete'),
+  validator.deleteCart,
+  middleware.loadCart,
+  cartController.deleteCart,
+);
 
 module.exports = router;

@@ -1,6 +1,5 @@
 const { Sequelize, Model } = require('sequelize');
 const Product = require('./product');
-const Cart = require('./cart');
 
 class ProductCart extends Model {
   static init(sequelize, DataTypes) {
