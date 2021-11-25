@@ -1,4 +1,5 @@
 const { Sequelize, Model } = require('sequelize');
+const Category = require('./category');
 
 class Product extends Model {
   static init(sequelize, DataTypes) {
@@ -28,6 +29,9 @@ class Product extends Model {
         timestamps: true,
         underscored: true,
         modelName: 'Product',
+        defaultScope: {
+          include: [{ model: Category, as: 'category' }],
+        },
       },
     );
   }
@@ -35,6 +39,10 @@ class Product extends Model {
   static associate(models) {
     this.productCart = this.belongsToMany(models.Cart, {
       through: models.ProductCart,
+    });
+    this.category = this.belongsTo(models.Category, {
+      as: 'category',
+      foreignKey: 'category_uuid',
     });
   }
 }
