@@ -1,8 +1,8 @@
-const { Sequelize, Model } = require('sequelize');
+const { Sequelize, Model, DataTypes } = require('sequelize');
 const Category = require('./category');
 
 class Product extends Model {
-  static init(sequelize, DataTypes) {
+  static init(sequelize) {
     return super.init(
       {
         uuid: {
@@ -42,7 +42,12 @@ class Product extends Model {
     });
     this.category = this.belongsTo(models.Category, {
       as: 'category',
-      foreignKey: 'category_uuid',
+      foreignKey: {
+        name: 'CategoryUuid',
+        field: 'category_uuid',
+        defaultValue: null,
+        type: DataTypes.STRING,
+      },
     });
   }
 }

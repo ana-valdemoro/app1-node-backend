@@ -45,4 +45,9 @@ module.exports = (app) => {
     // eslint-disable-next-line global-require
     require('./cart/cart.router'),
   );
+  app.use(
+    `/${tag}/categories`,
+    // eslint-disable-next-line global-require
+    require('./category/category.router'),
+  );
 };
