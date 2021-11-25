@@ -11,8 +11,23 @@ const getCategories = (filters, options) =>
 
 const getCategory = async (uuid) => Category.findOne({ where: { uuid } });
 
+const createCategory = async (data) => {
+  const category = await Category.create(data);
+  return category.save();
+};
+
+const putCategory = async (uuid, data) => {
+  const category = await getCategory(uuid);
+  return category.update(data);
+};
+
+const deleteCategory = async (category) => category.destroy();
+
 module.exports = {
   toPublic,
   getCategories,
   getCategory,
+  createCategory,
+  deleteCategory,
+  putCategory,
 };
