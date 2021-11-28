@@ -24,13 +24,21 @@ router.put(
   cartController.putCart,
 );
 
-// // Borrar un carrito
+// Borrar un carrito
 router.delete(
   '/:cartUuid',
   authorization('carts:delete'),
   validator.deleteCart,
   middleware.loadCart,
   cartController.deleteCart,
+);
+// Compra de un carrito
+router.post(
+  '/:cartUuid/buy',
+  authorization('carts:create'),
+  validator.buyCart,
+  middleware.loadCart,
+  cartController.buyCart,
 );
 
 module.exports = router;

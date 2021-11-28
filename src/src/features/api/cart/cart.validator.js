@@ -39,9 +39,22 @@ const deleteCart = validate(
     keyByField: true,
   },
 );
+const buyCart = validate(
+  {
+    body: joi.object({
+      address: joi.string().min(5).max(30).required(),
+    }),
+  },
+  {
+    context: false,
+    statusCode: 422,
+    keyByField: true,
+  },
+);
 
 module.exports = {
   createCart,
   putCart,
   deleteCart,
+  buyCart,
 };
