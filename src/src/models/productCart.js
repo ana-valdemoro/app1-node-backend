@@ -1,8 +1,8 @@
-const { Sequelize, Model } = require('sequelize');
+const { Sequelize, Model, DataTypes } = require('sequelize');
 const Product = require('./product');
 
 class ProductCart extends Model {
-  static init(sequelize, DataTypes) {
+  static init(sequelize) {
     return super.init(
       {
         uuid: {
@@ -35,11 +35,21 @@ class ProductCart extends Model {
   static associate(models) {
     this.cart = models.Product.belongsToMany(models.Cart, {
       through: this,
-      foreignKey: 'ProductUuid',
+      foreignKey: {
+        name: 'ProductUuid',
+        field: 'product_uuid',
+        defaultValue: null,
+        type: DataTypes.STRING,
+      },
     });
     this.product = models.Cart.belongsToMany(models.Product, {
       through: this,
-      foreignKey: 'CartUuid',
+      foreignKey: {
+        name: 'CartUuid',
+        field: 'cart_uuid',
+        defaultValue: null,
+        type: DataTypes.STRING,
+      },
     });
   }
 }
