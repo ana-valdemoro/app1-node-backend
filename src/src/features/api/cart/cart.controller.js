@@ -195,7 +195,7 @@ const putCart = async (req, res, next) => {
 
 const buyCart = async (req, res, next) => {
   const { cart } = res.locals;
-  if (req.user.uuid === cart.user_uuid) {
+  if (req.user.uuid !== cart.user_uuid) {
     return next(boom.unauthorized('Solo puede comprar el mismo usuario que lo creó'));
   }
   // req.body.productsUuid = cart.Products.map((product) => product.uuid);
