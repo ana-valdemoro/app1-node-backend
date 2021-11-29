@@ -31,6 +31,7 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "sendinblue": "https://oauth2:gWoHACVed3ZEH9-J8JZJ@gitlab.agiliacenter.com:4431/agilia-tools/sendinblue.git",
     "sequelize": "^6.6.5",
     "sequelize-fixtures": "^1.2.0",
     "uuid": "^8.3.0",
