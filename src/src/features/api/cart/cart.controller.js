@@ -10,6 +10,7 @@ const orderFilters = require('./cart.filters');
 const orderService = require('../order/order.service');
 const productLineService = require('../productLine/productLine.service');
 const orderActivityActions = require('../order/order.activity');
+const sendinblue = require('../../../utils/lib/email');
 
 async function undoCartCreation(productsInCart, order) {
   try {
@@ -198,7 +199,6 @@ const buyCart = async (req, res, next) => {
   if (req.user.uuid !== cart.user_uuid) {
     return next(boom.unauthorized('Solo puede comprar el mismo usuario que lo creó'));
   }
-  // req.body.productsUuid = cart.Products.map((product) => product.uuid);
 
   const productsLine = [];
   let totalPrice = 0.0;
@@ -232,7 +232,6 @@ const buyCart = async (req, res, next) => {
       productsLine.push(await productLineService.createProductLine(productLineToCreate));
       totalPrice += parseFloat(product.price);
     }
-    console.log(order);
     order = await orderService.putOrder(orderUuid, { ...order, totalPrice });
   } catch (error) {
     logger.error(`${error}`);
@@ -283,7 +282,11 @@ const buyCart = async (req, res, next) => {
   } catch (error) {
     logger.error(`${error}`);
   }
-
+  try {
+    await sendinblue.sendOrderConfirmationMessage(order, req.user);
+  } catch (error) {
+    logger.error(`${error}`);
+  }
   return res.status(201).json(orderService.toPublic(order));
 };
 module.exports = {
