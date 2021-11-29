@@ -43,7 +43,16 @@ module.exports = {
         {
           uuid: uuid.v4(),
           name: 'Ana Valdemoro',
-          email: 'ana@gmail.com',
+          email: 'ana.v.r1497@gmail.com',
+          password,
+          role_uuid: superAdminGroup.uuid,
+          token: '',
+          active: true,
+        },
+        {
+          uuid: uuid.v4(),
+          name: 'Sara Valdemoro',
+          email: 'sara@gmail.com',
           password,
           role_uuid: studentsGroup.uuid,
           token: '',
