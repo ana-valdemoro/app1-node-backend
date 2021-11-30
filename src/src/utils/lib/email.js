@@ -17,7 +17,7 @@ const sendForgotPassword = async (user, token) => {
         name: user.name,
       },
     ],
-    templateId: 12,
+    templateId: 5,
   };
 
   return sendEmail(data);
