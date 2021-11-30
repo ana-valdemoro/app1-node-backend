@@ -19,7 +19,7 @@ module.exports = {
         type: DataTypes.STRING,
       },
       token: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       active: {

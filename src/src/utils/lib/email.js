@@ -22,6 +22,26 @@ const sendForgotPassword = async (user, token) => {
 
   return sendEmail(data);
 };
+const sendAccountActivationEmail = async (user, token) => {
+  const url = `${process.env.FRONT_BASE_URL}/account/${token}/activate`;
+
+  const data = {
+    params: {
+      BOILERPLATE_USERNAME: user.name,
+      BOILERPLATE_URL: url,
+    },
+    subject: 'Activa tu cuenta',
+    to: [
+      {
+        email: user.email,
+        name: user.name,
+      },
+    ],
+    templateId: 6,
+  };
+
+  return sendEmail(data);
+};
 const sendOrderConfirmationMessage = async (order, user) => {
   const orderDate = `${order.createdAt.getDate()}/${
     order.createdAt.getMonth() + 1
@@ -54,4 +74,5 @@ const sendOrderConfirmationMessage = async (order, user) => {
 module.exports = {
   sendForgotPassword,
   sendOrderConfirmationMessage,
+  sendAccountActivationEmail,
 };
