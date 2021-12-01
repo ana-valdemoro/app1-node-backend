@@ -22,8 +22,8 @@ const sendForgotPassword = async (user, token) => {
 
   return sendEmail(data);
 };
-const sendAccountActivationEmail = async (user, token) => {
-  const url = `${process.env.FRONT_BASE_URL}/account/${token}/activate`;
+const sendAccountActivationEmail = async (user) => {
+  const url = `${process.env.FRONT_BASE_URL}/account/${user.token}/activate`;
 
   const data = {
     params: {

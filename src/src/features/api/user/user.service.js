@@ -23,8 +23,7 @@ const isUserAuthorized = async (user, role) => {
 };
 
 const activate = async (token, data) => {
-  const payload = jwt.verifyJWT(token);
-  const user = await User.findOne({ where: { uuid: payload.uuid } });
+  const user = await User.findOne({ where: { token } });
   return user.update(data);
 };
 
@@ -59,7 +58,7 @@ const getUserByEmail = async (email) => User.findOne({ where: { email } });
 const getUser = async (uuid) => User.findOne({ where: { uuid } });
 
 const createUser = async (data) => {
-  const dataToCreate = { ...data, token: '' };
+  const dataToCreate = { ...data, token: jwt.generateJWT({ uuid: '', type: 'user' }) };
   const user = await User.create(dataToCreate);
   return user.save();
 };

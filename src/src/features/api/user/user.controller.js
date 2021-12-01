@@ -2,7 +2,6 @@ const boom = require('@hapi/boom');
 const { cloneDeep } = require('lodash');
 const { UniqueConstraintError } = require('sequelize');
 const sendinblue = require('../../../utils/lib/email');
-const jwt = require('../../../utils/middleware/jwt');
 
 const userService = require('./user.service');
 const activityService = require('../activity/activity.service');
@@ -78,12 +77,8 @@ const register = async (req, res, next) => {
     logger.error(`${error}`);
     return next(boom.badData(error.message));
   }
-  const token = jwt.generateJWT({
-    uuid: user.uuid,
-    type: 'user',
-  });
   try {
-    sendinblue.sendAccountActivationEmail(user, token);
+    sendinblue.sendAccountActivationEmail(user);
   } catch (error) {
     logger.error(`${error}`);
   }
