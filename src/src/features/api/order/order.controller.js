@@ -103,7 +103,7 @@ const createOrder = async (req, res, next) => {
       action: activityActions.CREATE_ORDER,
       author: req.user.email,
       elementBefore: JSON.stringify({}),
-      elementAfter: JSON.stringify(order.toJSON()),
+      elementAfter: JSON.stringify(order),
     });
   } catch (error) {
     logger.error(`${error}`);

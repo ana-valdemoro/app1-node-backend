@@ -102,8 +102,8 @@ const putCategory = async (req, res, next) => {
     await activityService.createActivity({
       action: activityActions.UPDATE_CATEGORY,
       author: req.user.email,
-      elementBefore: JSON.stringify(category.toJSON()),
-      elementAfter: JSON.stringify(response.toJSON()),
+      elementBefore: JSON.stringify(category),
+      elementAfter: JSON.stringify(response),
     });
   } catch (error) {
     logger.error(`${error}`);
