@@ -31,8 +31,8 @@ const activate = async (req, res, next) => {
     await activityService.createActivity({
       action: authActivityActions.ACTIVATE,
       author: 'Anonymous',
-      elementBefore: JSON.stringify(user),
-      elementAfter: JSON.stringify(userUpdated),
+      elementBefore: JSON.stringify(user.toJSON()),
+      elementAfter: JSON.stringify(userUpdated.toJSON()),
     });
   } catch (error) {
     logger.error(`${error}`);
