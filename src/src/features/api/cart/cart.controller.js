@@ -104,13 +104,6 @@ const listCarts = async (req, res, next) => {
   }
 };
 
-async function deleteProductsInCart(products) {
-  // eslint-disable-next-line no-restricted-syntax
-  for (const product of products) {
-    // eslint-disable-next-line no-await-in-loop
-    await productCartService.deleteProductInCart(product.ProductCart);
-  }
-}
 const getCart = async (req, res, next) => {
   let cart;
   try {
@@ -146,7 +139,7 @@ const deleteCart = async (req, res, next) => {
     await activityService.createActivity({
       action: activityActions.DELETE_CART,
       author: req.user.email,
-      elementBefore: JSON.stringify(cartBeforeDelete.toJSON()),
+      elementBefore: JSON.stringify(cartBeforeDelete),
       elementAfter: JSON.stringify({}),
     });
   } catch (error) {
@@ -155,17 +148,6 @@ const deleteCart = async (req, res, next) => {
 
   return res.status(204).json({});
 };
-async function addProductsInCart(products, cart) {
-  // eslint-disable-next-line no-restricted-syntax
-  for (const productUuid of products) {
-    const productInCart = {
-      CartUuid: cart.uuid,
-      ProductUuid: productUuid,
-    };
-    // eslint-disable-next-line no-await-in-loop
-    await productCartService.createProductInCart(productInCart);
-  }
-}
 
 const putCart = async (req, res, next) => {
   let cart;
@@ -204,7 +186,7 @@ const putCart = async (req, res, next) => {
     await activityService.createActivity({
       action: activityActions.UPDATE_CART,
       author: req.user.email,
-      elementBefore: JSON.stringify(cart.toJSON()),
+      elementBefore: JSON.stringify(cart),
       elementAfter: JSON.stringify(response),
     });
   } catch (error) {

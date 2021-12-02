@@ -1,7 +1,6 @@
 const express = require('express');
 
 const router = express.Router();
-const { authorize } = require('passport');
 const middleware = require('./order.middleware');
 const validator = require('./order.validator');
 const authorization = require('../../../utils/middleware/authorization');
