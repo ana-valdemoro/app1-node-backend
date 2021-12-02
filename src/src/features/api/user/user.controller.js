@@ -134,17 +134,27 @@ const forgot = async (req, res) => {
   });
 };
 
-const recovery = async (req, res) => {
+const recovery = async (req, res, next) => {
   const { token, password, confirmPassword } = req.body;
-
+  let user;
   try {
     if (password === confirmPassword) {
-      await userService.recoveryPassword(token, { password });
+      user = await userService.recoveryPassword(token, { password });
     }
   } catch (error) {
     logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
   }
-
+  try {
+    await activityService.createActivity({
+      action: authActivityActions.RECOVERY,
+      author: 'Anonymous',
+      elementBefore: JSON.stringify(user.toJSON()),
+      elementAfter: JSON.stringify(user.toJSON()),
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+  }
   return res.json({
     status: 'OK',
   });
