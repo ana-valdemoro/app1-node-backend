@@ -2,7 +2,6 @@ const boom = require('@hapi/boom');
 const { cloneDeep } = require('lodash');
 const { UniqueConstraintError } = require('sequelize');
 const sendinblue = require('../../../utils/lib/email');
-
 const userService = require('./user.service');
 const activityService = require('../activity/activity.service');
 const userActivityActions = require('./user.activity');
@@ -96,17 +95,17 @@ const register = async (req, res, next) => {
     return next(boom.badData(error.message));
   }
   try {
-    sendinblue.sendAccountActivationEmail(user);
+    await sendinblue.sendAccountActivationEmail(user);
   } catch (error) {
     logger.error(`${error}`);
   }
 
   try {
     await activityService.createActivity({
-      action: activityActions.CREATE_USER,
+      action: userActivityActions.CREATE_USER,
       author: 'Anonymous',
-      elementAfter: JSON.stringify(user.toJSON()),
       elementBefore: JSON.stringify({}),
+      elementAfter: JSON.stringify(user.toJSON()),
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -193,7 +192,7 @@ const createUser = async (req, res, next) => {
 
   try {
     await activityService.createActivity({
-      action: activityActions.CREATE_USER,
+      action: userActivityActions.CREATE_USER,
       author: req.user.email,
       elementBefore: JSON.stringify({}),
       elementAfter: JSON.stringify(user.toJSON()),
@@ -225,12 +224,12 @@ const putUser = async (req, res, next) => {
   }
 
   const userData = req.body;
-  let response;
+  let userUpdated;
 
   try {
     const userUuid = user.uuid;
     delete userData.uuid;
-    response = await userService.putUser(userUuid, userData);
+    userUpdated = await userService.putUser(userUuid, userData);
   } catch (error) {
     if (error instanceof UniqueConstraintError) {
       return next(boom.badData('Ya existe un usuario con el email introducido'));
@@ -241,16 +240,16 @@ const putUser = async (req, res, next) => {
 
   try {
     await activityService.createActivity({
-      action: activityActions.UPDATE_USER,
+      action: userActivityActions.UPDATE_USER,
       author: req.user.email,
       elementBefore: JSON.stringify(user.toJSON()),
-      elementAfter: JSON.stringify(response.toJSON()),
+      elementAfter: JSON.stringify(userUpdated.toJSON()),
     });
   } catch (error) {
     logger.error(`${error}`);
   }
 
-  res.json(userService.toPublic(response));
+  res.json(userService.toPublic(userUpdated));
 };
 
 const deleteUser = async (req, res, next) => {
@@ -266,9 +265,10 @@ const deleteUser = async (req, res, next) => {
 
   try {
     await activityService.createActivity({
-      action: activityActions.DELETE_USER,
+      action: userActivityActions.DELETE_USER,
       author: req.user.toJSON(),
-      elementBefore: userBeforeDelete.toJSON(),
+      elementBefore: JSON.stringify(userBeforeDelete.toJSON()),
+      elementAfter: JSON.stringify({}),
     });
   } catch (error) {
     logger.error(`${error}`);
