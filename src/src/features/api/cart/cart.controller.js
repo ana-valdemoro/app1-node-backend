@@ -279,9 +279,9 @@ const buyCart = async (req, res, next) => {
     await cartService.deleteCart(cart);
     try {
       await activityService.createActivity({
-        action: activityActions.DELETE_CART,
+        action: activityActions.DELETE_CART_AFTER_BUY_IT,
         author: req.user.email,
-        elementBefore: JSON.stringify(cartBeforeDelete.toJSON()),
+        elementBefore: JSON.stringify(cartBeforeDelete),
         elementAfter: JSON.stringify({}),
       });
     } catch (error) {
@@ -294,10 +294,10 @@ const buyCart = async (req, res, next) => {
   // Dejamos un registro de la creación del pedido y del borrado del carrito
   try {
     await activityService.createActivity({
-      action: orderActivityActions.CREATE_ORDER,
+      action: orderActivityActions.CREATE_ORDER_FROM_CART,
       author: req.user.email,
       elementBefore: JSON.stringify({}),
-      elementAfter: JSON.stringify(order.toJSON()),
+      elementAfter: JSON.stringify(order),
     });
   } catch (error) {
     logger.error(`${error}`);
