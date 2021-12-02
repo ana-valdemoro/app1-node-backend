@@ -78,7 +78,16 @@ const login = async (req, res, next) => {
     logger.error(`${error}`);
     return next(boom.badRequest(error.message));
   }
-
+  try {
+    await activityService.createActivity({
+      action: authActivityActions.LOGIN,
+      author: 'Anonymous',
+      elementBefore: JSON.stringify({}),
+      elementAfter: JSON.stringify(response.toJSON()),
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+  }
   return res.json(response);
 };
 
