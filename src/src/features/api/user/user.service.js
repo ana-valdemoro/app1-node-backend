@@ -22,10 +22,9 @@ const isUserAuthorized = async (user, role) => {
   );
 };
 
-const activate = async (token, data) => {
-  const user = await User.findOne({ where: { token } });
-  return user.update(data);
-};
+const getUserByToken = async (token) => User.findOne({ where: { token } });
+
+const activate = async (user, data) => user.update(data);
 
 const forgotPassword = async (user) => {
   const token = jwt.generateJWT({
@@ -79,6 +78,7 @@ module.exports = {
   recoveryPassword,
   getUsers,
   getUserByEmail,
+  getUserByToken,
   createUser,
   getUser,
   putUser,

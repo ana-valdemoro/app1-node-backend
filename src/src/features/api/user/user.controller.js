@@ -5,18 +5,36 @@ const sendinblue = require('../../../utils/lib/email');
 
 const userService = require('./user.service');
 const activityService = require('../activity/activity.service');
-const activityActions = require('./user.activity');
+const userActivityActions = require('./user.activity');
+const authActivityActions = require('../auth/auth.activity');
 const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
 
-const activate = async (req, res) => {
+const activate = async (req, res, next) => {
   const { token } = req.params;
+  let user;
+  let userUpdated;
 
   try {
     if (token !== '') {
-      await userService.activate(token, { active: true, token: '' });
+      user = await userService.getUserByToken(token);
     }
+    if (!user) {
+      return next(boom.badData('Este usuario ya tiene la cuenta activada'));
+    }
+    userUpdated = await userService.activate(user, { active: true, token: '' });
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error));
+  }
+  try {
+    await activityService.createActivity({
+      action: authActivityActions.ACTIVATE,
+      author: 'Anonymous',
+      elementBefore: JSON.stringify(user),
+      elementAfter: JSON.stringify(userUpdated),
+    });
   } catch (error) {
     logger.error(`${error}`);
   }
