@@ -53,7 +53,7 @@ class User extends Model {
             );
           },
           beforeUpdate(instance) {
-            if (instance.changed() && instance.changed().indexOf('password')) {
+            if (instance.changed('password')) {
               instance.set(
                 'password',
                 // eslint-disable-next-line max-len
