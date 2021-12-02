@@ -1,4 +1,5 @@
 const boom = require('@hapi/boom');
+const { cloneDeep } = require('lodash');
 const orderService = require('./order.service');
 const productLineService = require('../productLine/productLine.service');
 const productService = require('../product/product.service');
@@ -115,6 +116,7 @@ const createOrder = async (req, res, next) => {
 const cancelOrder = async (req, res, next) => {
   let { order } = res.locals;
   const { cancellationMessage } = req.body;
+  const orderBeforeUpdate = cloneDeep(order);
 
   if (order.status !== orderService.ORDER_STATUS_WAITING) {
     return next(boom.badData('No se puede cancelar un pedido que no este parado.'));
@@ -124,6 +126,17 @@ const cancelOrder = async (req, res, next) => {
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badData(error.message));
+  }
+
+  try {
+    await activityService.createActivity({
+      action: activityActions.CANCEL_ORDER,
+      author: req.user.email,
+      elementBefore: JSON.stringify(orderBeforeUpdate),
+      elementAfter: JSON.stringify(order),
+    });
+  } catch (error) {
+    logger.error(`${error}`);
   }
   return res.json(await orderService.toPublic(order));
 };
