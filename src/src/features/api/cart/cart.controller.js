@@ -12,6 +12,7 @@ const productLineService = require('../productLine/productLine.service');
 const orderActivityActions = require('../order/order.activity');
 const sendinblue = require('../../../utils/lib/email');
 
+// Funciones privadas
 async function undoCartCreation(productsInCart, order) {
   try {
     await cartService.deleteCart(order);
@@ -24,7 +25,26 @@ async function undoCartCreation(productsInCart, order) {
     logger.error(`${rollBackError}`);
   }
 }
+async function addProductsInCart(products, cart) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const productUuid of products) {
+    const productInCart = {
+      CartUuid: cart.uuid,
+      ProductUuid: productUuid,
+    };
+    // eslint-disable-next-line no-await-in-loop
+    await productCartService.createProductInCart(productInCart);
+  }
+}
+async function deleteProductsInCart(products) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const product of products) {
+    // eslint-disable-next-line no-await-in-loop
+    await productCartService.deleteProductInCart(product.ProductCart);
+  }
+}
 
+// Funciones públicas
 const createCart = async (req, res, next) => {
   const userUuid = req.body.userUuid ? req.body.userUuid : req.user.uuid;
   const { productsUuid } = req.body;
