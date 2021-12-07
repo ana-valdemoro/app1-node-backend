@@ -140,9 +140,32 @@ const cancelOrder = async (req, res, next) => {
   }
   return res.json(await orderService.toPublic(order));
 };
+
+const listOrderStatistics = async (req, res, next) => {
+  let productStatistics;
+  let statusStatistics;
+  try {
+    statusStatistics = await orderService.getOrderStatisticsByStatus();
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+  try {
+    productStatistics = await productLineService.getProductStatics();
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+  const response = {
+    products: productStatistics,
+    orders: statusStatistics,
+  };
+  return res.json(response);
+};
 module.exports = {
   listOrders,
   getOrder,
   createOrder,
   cancelOrder,
+  listOrderStatistics,
 };

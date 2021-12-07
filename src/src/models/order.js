@@ -41,6 +41,11 @@ class Order extends Model {
         defaultScope: {
           include: [{ model: ProductLine, as: 'productLines', required: true }],
         },
+        scopes: {
+          WithoutUserAndProductLines: {
+            include: [],
+          },
+        },
       },
     );
   }

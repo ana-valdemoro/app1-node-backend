@@ -1,3 +1,4 @@
+const { Sequelize } = require('sequelize');
 const { Order } = require('../../../models');
 
 const ORDER_STATUS_WAITING = 0;
@@ -39,6 +40,15 @@ const cancelOrder = async (uuid, cancellationMessage) => {
 };
 const deleteOrder = async (order) => order.destroy();
 
+const getOrderStatisticsByStatus = async () =>
+  Order.scope('WithoutUserAndProductLines').findAll({
+    group: ['Order.status'],
+    attributes: [
+      [Sequelize.col('Order.status'), 'status'],
+      [Sequelize.fn('count', Sequelize.col('Order.status')), 'totalOrders'],
+    ],
+  });
+
 module.exports = {
   toPublic,
   getOrders,
@@ -50,4 +60,5 @@ module.exports = {
   cancelOrder,
   deleteOrder,
   putOrder,
+  getOrderStatisticsByStatus,
 };

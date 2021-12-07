@@ -6,6 +6,9 @@ const validator = require('./order.validator');
 const authorization = require('../../../utils/middleware/authorization');
 const orderController = require('./order.controller');
 
+// Ver estadísticas de pedidos
+router.get('/statistics', authorization('statisticss:view'), orderController.listOrderStatistics);
+
 // Ver un pedido
 router.get(
   '/:orderUuid',
