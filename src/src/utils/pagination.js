@@ -8,7 +8,9 @@ pagination.getParams = (page, pageSize) => {
   if (limit > config.pagination.maxPageSize) {
     limit = config.pagination.maxPageSize;
   }
-
+  if (limit === -1) {
+    return { limit: null, page: null };
+  }
   return {
     limit,
     page: parseInt(page, 10) || 1,

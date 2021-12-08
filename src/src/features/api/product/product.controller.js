@@ -8,15 +8,25 @@ const activityService = require('../activity/activity.service');
 const activityActions = require('./product.activity');
 
 const listProducts = async (req, res, next) => {
+  const filters = productFilters(req.query);
+  const options = queryOptions(req.query);
+  let products;
   try {
-    const filters = productFilters(req.query);
-    const options = queryOptions(req.query);
-
-    res.json(await productService.getProducts(filters, options));
+    products = await productService.getPaginatedProducts(filters, options);
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
   }
+  // Si las opciones de paginación no están definidas, se devuelven todos los elementos
+  // de la base de datos
+  const response = {
+    data: products.rows,
+    page: options.page || 1,
+    perPage: options.limit || -1,
+    totalItems: products.count,
+    totalPages: options.limit ? Math.ceil(products.count / options.limit) : 1,
+  };
+  return res.json(response);
 };
 const getProduct = async (req, res, next) => {
   try {

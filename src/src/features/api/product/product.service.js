@@ -3,10 +3,12 @@ const { Product } = require('../../../models');
 
 const toPublic = (product) => product.toJSON();
 
-const getProducts = (filters, options) =>
-  Product.findAll({
+const getPaginatedProducts = (filters, options) =>
+  Product.findAndCountAll({
     where: filters,
     order: options.order,
+    limit: options.limit,
+    offset: options.page * options.limit - options.limit,
   });
 
 const getProduct = async (uuid) => Product.findOne({ where: { uuid } });
@@ -25,7 +27,7 @@ const deleteProduct = async (product) => product.destroy();
 
 module.exports = {
   toPublic,
-  getProducts,
+  getPaginatedProducts,
   getProduct,
   createProduct,
   deleteProduct,
