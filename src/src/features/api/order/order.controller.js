@@ -10,6 +10,20 @@ const logger = require('../../../config/winston');
 const activityService = require('../activity/activity.service');
 const activityActions = require('./order.activity');
 
+// Funciones privadas
+async function undoOrderCreation(productLines, order) {
+  try {
+    await orderService.deleteOrder(order);
+    // eslint-disable-next-line no-restricted-syntax
+    for (const productLine of productLines) {
+      // eslint-disable-next-line no-await-in-loop
+      await productLineService.deleteProductLine(productLine);
+    }
+  } catch (rollBackError) {
+    logger.error(`${rollBackError}`);
+  }
+}
+// Funciones públicas
 const listOrders = async (req, res, next) => {
   try {
     const filters = orderFilters(req.query);
@@ -43,20 +57,9 @@ const getOrder = async (req, res, next) => {
     return next(boom.badImplementation(error.message));
   }
 };
-async function undoOrderCreation(productLines, order) {
-  try {
-    await orderService.deleteOrder(order);
-    // eslint-disable-next-line no-restricted-syntax
-    for (const productLine of productLines) {
-      // eslint-disable-next-line no-await-in-loop
-      await productLineService.deleteProductLine(productLine);
-    }
-  } catch (rollBackError) {
-    logger.error(`${rollBackError}`);
-  }
-}
+
 const createOrder = async (req, res, next) => {
-  const userUuid = req.body.userUuid ? req.body.userUuid : req.user.uuid;
+  const userUuid = req.body.userUuid || req.user.uuid;
   const { productsUuid } = req.body;
   const productsLine = [];
   let totalPrice = 0.0;
