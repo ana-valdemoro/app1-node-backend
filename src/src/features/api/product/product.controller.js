@@ -33,7 +33,6 @@ const getProduct = async (req, res, next) => {
     if (res.locals && res.locals.product) {
       return res.json(await productService.toPublic(res.locals.product));
     }
-    res.json(await productService.toPublic(req.user));
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
