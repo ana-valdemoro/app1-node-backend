@@ -13,7 +13,13 @@ router.get('/', authorization('cart:view'), cartController.listCarts);
 router.get('/:cartUuid', authorization('carts:view'), middleware.loadCart, cartController.getCart);
 
 // Crear un carrito
-router.post('/', authorization('cart:create'), validator.createCart, cartController.createCart);
+router.post(
+  '/',
+  authorization('cart:create'),
+  validator.createCart,
+  middleware.existUserCart,
+  cartController.createCart,
+);
 
 // Editar un carrito
 router.put(

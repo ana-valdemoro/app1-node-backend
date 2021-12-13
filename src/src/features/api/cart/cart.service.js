@@ -12,6 +12,8 @@ const getCarts = (filters, options) =>
   });
 const getCart = async (uuid) => Cart.findOne({ where: { uuid } });
 
+const getCartByUserUuid = async (userUuid) => Cart.findOne({ where: { user_uuid: userUuid } });
+
 const createCart = async (data) => {
   const cart = await Cart.create(data);
   return cart.save();
@@ -28,6 +30,7 @@ module.exports = {
   toPublic,
   getCarts,
   getCart,
+  getCartByUserUuid,
   createCart,
   deleteCart,
   putCart,

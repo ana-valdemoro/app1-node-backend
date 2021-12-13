@@ -25,6 +25,7 @@ async function undoCartCreation(productsInCart, order) {
     logger.error(`${rollBackError}`);
   }
 }
+
 async function addProductsInCart(products, cart) {
   // eslint-disable-next-line no-restricted-syntax
   for (const productUuid of products) {
@@ -36,6 +37,7 @@ async function addProductsInCart(products, cart) {
     await productCartService.createProductInCart(productInCart);
   }
 }
+
 async function deleteProductsInCart(products) {
   // eslint-disable-next-line no-restricted-syntax
   for (const product of products) {
@@ -117,6 +119,7 @@ const getCart = async (req, res, next) => {
     return next(boom.badImplementation(error.message));
   }
 };
+
 const deleteCart = async (req, res, next) => {
   const { cart } = res.locals;
   const cartBeforeDelete = cloneDeep(cart);

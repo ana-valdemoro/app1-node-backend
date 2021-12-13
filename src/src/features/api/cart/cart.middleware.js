@@ -21,6 +21,21 @@ async function loadCart(req, res, next) {
   next();
 }
 
+async function existUserCart(req, res, next) {
+  let cart;
+  const userUuid = req.body.userUuid || req.user.uuid;
+  try {
+    cart = await service.getCartByUserUuid(userUuid);
+  } catch (error) {
+    return next(
+      boom.badImplementation('Ha habido un error al comprobar si el usuario tenia un carrito'),
+    );
+  }
+  if (cart) return next(boom.badData('El usuario posee un carrito, no se le puede crear otro'));
+  next();
+}
+
 module.exports = {
   loadCart,
+  existUserCart,
 };
