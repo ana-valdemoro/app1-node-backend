@@ -9,16 +9,22 @@ module.exports = {
           uuid: uuid.v4(),
           name: 'salsas',
           slug: 'salsas',
+          updated_at: new Date(),
+          created_at: new Date(),
         },
         {
           uuid: uuid.v4(),
           name: 'bebidas vegetales',
           slug: 'bebidas-vegetales',
+          updated_at: new Date(),
+          created_at: new Date(),
         },
         {
           uuid: uuid.v4(),
           name: 'mantequilla y margarina',
           slug: 'mantequilla',
+          updated_at: new Date(),
+          created_at: new Date(),
         },
       ]);
       const saucesCategory = await Category.findOne({ where: { name: 'salsas' } });
