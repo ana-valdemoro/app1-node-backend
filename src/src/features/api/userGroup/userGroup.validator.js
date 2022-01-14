@@ -6,7 +6,7 @@ const createUserGroup = validate(
     body: joi.object({
       // eslint-disable-next-line newline-per-chained-call
       name: joi.string().alphanum().min(1).max(30).required(),
-      permissions: joi.array(),
+      permissions: joi.string(),
     }),
   },
   {

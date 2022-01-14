@@ -18,14 +18,14 @@ router.post(
 );
 // Obtener un grupo
 router.get(
-  '/:employeeGroupUuid',
+  '/:userGroupUuid',
   authorization('usersGroups:view'),
   middleware.loadUserGroup,
   userGroupController.getUserGroup,
 );
 // Actualizar un grupo
 router.put(
-  '/:employeeGroupUuid',
+  '/:userGroupUuid',
   authorization('usersGroups:update'),
   validator.createUserGroup,
   middleware.loadUserGroup,
@@ -33,7 +33,7 @@ router.put(
 );
 // Borrar un grupo
 router.delete(
-  '/:employeeGroupUuid',
+  '/:userGroupUuid',
   authorization('usersGroups:delete'),
   validator.deleteUserGroup,
   middleware.loadUserGroup,

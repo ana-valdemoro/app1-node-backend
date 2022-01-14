@@ -16,12 +16,12 @@ const getUserGroup = async (uuid) =>
   });
 
 const createUserGroup = async (data) => {
-  const userGroup = UserGroup.create(data);
+  const userGroup = await UserGroup.create(data);
   return userGroup.save();
 };
 
 const putUserGroup = async (uuid, data) => {
-  const userGroup = getUserGroup(uuid);
+  const userGroup = await getUserGroup(uuid);
   return userGroup.update(data);
 };
 
