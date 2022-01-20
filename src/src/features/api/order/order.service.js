@@ -7,9 +7,9 @@ const ORDER_STATUS_CANCELED = 2;
 
 const toPublic = (order) => order.toJSON();
 
-const getOrders = (filters, options) =>
+const getOrders = (filters, options, userUuid) =>
   Order.findAll({
-    where: filters,
+    where: { ...filters, user_uuid: userUuid },
     order: options.order,
   });
 const getOrder = async (uuid) => Order.findOne({ where: { uuid } });

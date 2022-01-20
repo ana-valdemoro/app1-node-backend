@@ -26,10 +26,10 @@ async function undoOrderCreation(productLines, order) {
 // Funciones públicas
 const listOrders = async (req, res, next) => {
   try {
-    const filters = orderFilters(req.query, req.user.uuid);
+    const filters = orderFilters(req.query);
     const options = queryOptions(req.query);
 
-    res.json(await orderService.getOrders(filters, options));
+    res.json(await orderService.getOrders(filters, options, req.user.uuid));
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
