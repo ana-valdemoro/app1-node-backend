@@ -5,11 +5,6 @@ const CART_STATUS_FINISHED = 1;
 
 const toPublic = (cart) => cart.toJSON();
 
-const getCarts = (filters, options) =>
-  Cart.findAll({
-    where: filters,
-    order: options.order,
-  });
 const getCart = async (uuid) => Cart.findOne({ where: { uuid } });
 
 const getCartByUserUuid = async (userUuid) => Cart.findOne({ where: { user_uuid: userUuid } });
@@ -28,7 +23,6 @@ const deleteCart = async (cart) => cart.destroy();
 
 module.exports = {
   toPublic,
-  getCarts,
   getCart,
   getCartByUserUuid,
   createCart,

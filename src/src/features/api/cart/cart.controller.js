@@ -94,19 +94,20 @@ const createCart = async (req, res, next) => {
   res.status(201).json(cartService.toPublic(cart));
 };
 
-const listCarts = async (req, res, next) => {
+const getCart = async (req, res, next) => {
   try {
-    const filters = orderFilters(req.query);
-    const options = queryOptions(req.query);
-
-    return res.json(await cartService.getCarts(filters, options));
+    const cart = await cartService.getCartByUserUuid(req.user.uuid);
+    if (!cart) {
+      return next(boom.notFound('Carrito no encontrado'));
+    }
+    return res.json(cart);
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
   }
 };
 
-const getCart = async (req, res, next) => {
+const getCartByCartUuid = async (req, res, next) => {
   let cart;
   try {
     if (res.locals && res.locals.cart) {
@@ -296,8 +297,8 @@ const buyCart = async (req, res, next) => {
 };
 module.exports = {
   createCart,
-  listCarts,
   getCart,
+  getCartByCartUuid,
   putCart,
   deleteCart,
   buyCart,

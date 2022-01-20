@@ -6,11 +6,16 @@ const cartController = require('./cart.controller');
 const authorization = require('../../../utils/middleware/authorization');
 const middleware = require('./cart.middleware');
 
-// Listar los carritos
-router.get('/', authorization('cart:view'), cartController.listCarts);
+// Listar el carrito del usuario
+router.get('/', authorization('cart:view'), cartController.getCart);
 
-// Ver un carrito
-router.get('/:cartUuid', authorization('carts:view'), middleware.loadCart, cartController.getCart);
+// Obtener un carrito por su uuid
+router.get(
+  '/:cartUuid',
+  authorization('carts:view'),
+  middleware.loadCart,
+  cartController.getCartByCartUuid,
+);
 
 // Crear un carrito
 router.post(
