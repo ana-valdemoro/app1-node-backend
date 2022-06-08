@@ -19,8 +19,9 @@ Este proyecto posee dos ramas:
 ## Instalación y ejecución ##
 
 **Primero:** se clona el repositorio con: `git clone https://github.com/ana-valdemoro/app1-node-backend.git`   
-**Segundo**, Dentro del proyecto, se accede a la carpeta `src/docker` y ejecutamos el archivo `build-docker-compose.sh` para construir e iniciar los contenedores de docker. También disponemos de los archivos `start-docker-compose.sh` y `stop-docker-compose.sh` para iniciar y parar los contenedores.
-**Tercero**, debemos crear las tablas dentro de la base de datos.
+**Segundo:** Dentro del proyecto, se accede a la carpeta `src/docker` y ejecutamos el archivo `build-docker-compose.sh` para construir e iniciar los contenedores de docker. También disponemos de los archivos `start-docker-compose.sh` y `stop-docker-compose.sh` para iniciar y parar los contenedores.  
+**Tercero:** instalamos las dependecias del proyecto para tener acceso a sequelize y poder migrar y poblar las tablas. Ejecutamos `npm install`.  
+**Cuarto:** Nos situamos en el directorio `src/src` y ejecutamos el comando `npx sequelize-cli db:migrate` y  `npx sequelize-cli db:seed:all`. Sino tenemos `npx` previamente lo instalamos con `npm install px`.
 
 ## Notas ##
 Este proyecto posee una parte de front que se encuentra en el repositorio: app1-frontend
